@@ -343,7 +343,7 @@ function handleLogin(req, res) {
     if (data.username === USERNAME && data.password === PASSWORD) {
       const sid = crypto.randomBytes(16).toString('hex');
       sessions.set(sid, { username: USERNAME });
-      res.writeHead(302, { 'Set-Cookie': `sid=${sid}; HttpOnly`, Location: '/spindles' });
+      res.writeHead(302, { 'Set-Cookie': `sid=${sid}; HttpOnly; Path=/`, Location: '/spindles' });
       res.end();
     } else {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -353,7 +353,7 @@ function handleLogin(req, res) {
 }
 
 function handleLogout(res) {
-  res.writeHead(302, { 'Set-Cookie': 'sid=; Max-Age=0', Location: '/login' });
+  res.writeHead(302, { 'Set-Cookie': 'sid=; Max-Age=0; Path=/' , Location: '/login' });
   res.end();
 }
 
