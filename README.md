@@ -20,8 +20,13 @@ A LAN-accessible Node.js rewrite of the spindle tracking app that keeps the CSV-
    ```
    http://<server-lan-ip>:5000/login
    ```
+   (Use one of the LAN IPs printed at startup.)
 4. Place your existing `spindle_data.csv` and `yedek_data.csv` files in the project root (they’ll be created automatically if missing).
 
 ## Notes
 - Data is stored directly in the CSV files; edits are immediately persisted.
 - Sessions are in-memory; restart the server to reset active logins.
+- If you can reach the app locally but not from other devices:
+  - Allow inbound traffic on port 5000 (or your custom `PORT`) in Windows Defender Firewall for Private networks.
+  - Confirm both machines share the same subnet (e.g., `192.168.1.x`).
+  - Reuse the exact LAN address shown in the startup log.

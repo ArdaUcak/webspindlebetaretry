@@ -4,6 +4,7 @@ import { parse as parseUrl } from 'url';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import crypto from 'crypto';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -601,6 +602,29 @@ const server = http.createServer((req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running at http://0.0.0.0:${PORT}`);
+const BIND_HOST = process.env.HOST || '0.0.0.0';
+
+function listLanAddresses() {
+  const interfaces = os.networkInterfaces();
+  const addrs = [];
+  Object.values(interfaces).forEach((entries) => {
+    entries?.forEach((entry) => {
+      if (entry.family === 'IPv4' && !entry.internal) {
+        addrs.push(entry.address);
+      }
+    });
+  });
+  return addrs;
+}
+
+server.listen(PORT, BIND_HOST, () => {
+  const lanIps = listLanAddresses();
+  console.log(`Server running at http://${BIND_HOST}:${PORT}`);
+  if (lanIps.length) {
+    lanIps.forEach((ip) => {
+      console.log(`LAN:   http://${ip}:${PORT}`);
+    });
+  } else {
+    console.log('No LAN IPv4 detected; check network adapter status.');
+  }
 });
