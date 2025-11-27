@@ -1,0 +1,10 @@
+{
+  "name": "webspindlebetaretry",
+  "version": "1.0.0",
+  "description": "LAN-accessible web app for spindle tracking implemented without external dependencies.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js"
+  }
+}
