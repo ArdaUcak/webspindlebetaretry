@@ -142,7 +142,7 @@ function renderLayout(content, options = {}) {
   </div>
 </nav>
 <div class="container mb-4">
-  ${message ? `<div class="alert alert-${message.type} alert-dismissible fade show" role="alert">${message.text}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>` : ''}
+  ${message ? `<div class="alert alert-${escapeHtml(message.type)} alert-dismissible fade show" role="alert">${escapeHtml(message.text)}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>` : ''}
   ${content}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -173,15 +173,15 @@ function renderLogin(message) {
 function renderSpindles(rows, query) {
   const tableRows = rows.map((row) => `
     <tr>
-      <td>${row.id}</td>
-      <td>${row['Referans ID']}</td>
-      <td>${row['Çalışma Saati']}</td>
-      <td>${row['Takılı Olduğu Makine']}</td>
-      <td>${row['Makinaya Takıldığı Tarih']}</td>
-      <td>${row['Son Güncelleme']}</td>
+      <td>${escapeHtml(row.id)}</td>
+      <td>${escapeHtml(row['Referans ID'])}</td>
+      <td>${escapeHtml(row['Çalışma Saati'])}</td>
+      <td>${escapeHtml(row['Takılı Olduğu Makine'])}</td>
+      <td>${escapeHtml(row['Makinaya Takıldığı Tarih'])}</td>
+      <td>${escapeHtml(row['Son Güncelleme'])}</td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-primary" href="/spindles/${row.id}/edit">Düzenle</a>
-        <form class="d-inline" method="post" action="/spindles/${row.id}/delete" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+        <a class="btn btn-sm btn-outline-primary" href="/spindles/${encodeURIComponent(row.id)}/edit">Düzenle</a>
+        <form class="d-inline" method="post" action="/spindles/${encodeURIComponent(row.id)}/delete" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
           <button class="btn btn-sm btn-outline-danger" type="submit">Sil</button>
         </form>
       </td>
@@ -194,7 +194,7 @@ function renderSpindles(rows, query) {
 </div>
 <form class="row gy-2 gx-2 align-items-center mb-3" method="get" action="/spindles">
   <div class="col-auto"><label class="col-form-label">Referans ID ile Ara:</label></div>
-  <div class="col-auto"><input class="form-control" name="q" value="${query ?? ''}"></div>
+  <div class="col-auto"><input class="form-control" name="q" value="${escapeHtml(query ?? '')}"></div>
   <div class="col-auto">
     <button class="btn btn-primary" type="submit">Ara</button>
     <a class="btn btn-secondary" href="/spindles">Temizle</a>
@@ -215,10 +215,10 @@ function renderSpindleForm(mode, record) {
 <h4>${isAdd ? 'Spindle Ekle' : 'Spindle Düzenle'}</h4>
 <div class="card shadow-sm mt-3"><div class="card-body">
   <form method="post">
-    <div class="mb-3"><label class="form-label">Referans ID</label><input required class="form-control" name="Referans ID" value="${record?.['Referans ID'] ?? ''}"></div>
-    <div class="mb-3"><label class="form-label">Çalışma Saati</label><input class="form-control" name="Çalışma Saati" value="${record?.['Çalışma Saati'] ?? ''}"></div>
-    <div class="mb-3"><label class="form-label">Takılı Olduğu Makine</label><input class="form-control" name="Takılı Olduğu Makine" value="${record?.['Takılı Olduğu Makine'] ?? ''}"></div>
-    <div class="mb-3"><label class="form-label">Makinaya Takıldığı Tarih</label><input class="form-control" name="Makinaya Takıldığı Tarih" placeholder="gg-aa-yyyy" value="${record?.['Makinaya Takıldığı Tarih'] ?? today()}"></div>
+    <div class="mb-3"><label class="form-label">Referans ID</label><input required class="form-control" name="Referans ID" value="${escapeHtml(record?.['Referans ID'] ?? '')}"></div>
+    <div class="mb-3"><label class="form-label">Çalışma Saati</label><input class="form-control" name="Çalışma Saati" value="${escapeHtml(record?.['Çalışma Saati'] ?? '')}"></div>
+    <div class="mb-3"><label class="form-label">Takılı Olduğu Makine</label><input class="form-control" name="Takılı Olduğu Makine" value="${escapeHtml(record?.['Takılı Olduğu Makine'] ?? '')}"></div>
+    <div class="mb-3"><label class="form-label">Makinaya Takıldığı Tarih</label><input class="form-control" name="Makinaya Takıldığı Tarih" placeholder="gg-aa-yyyy" value="${escapeHtml(record?.['Makinaya Takıldığı Tarih'] ?? today())}"></div>
     <button class="btn btn-primary" type="submit">Kaydet</button>
     <a class="btn btn-secondary" href="/spindles">İptal</a>
   </form>
@@ -229,18 +229,18 @@ function renderSpindleForm(mode, record) {
 function renderYedeks(rows, query) {
   const tableRows = rows.map((row) => `
     <tr>
-      <td>${row.id}</td>
-      <td>${row['Referans ID']}</td>
-      <td>${row['Açıklama']}</td>
-      <td>${row['Tamirde mi']}</td>
-      <td>${row['Bakıma Gönderilme']}</td>
-      <td>${row['Geri Dönme']}</td>
-      <td>${row['Söküldüğü Makine']}</td>
-      <td>${row['Sökülme Tarihi']}</td>
-      <td>${row['Son Güncelleme']}</td>
+      <td>${escapeHtml(row.id)}</td>
+      <td>${escapeHtml(row['Referans ID'])}</td>
+      <td>${escapeHtml(row['Açıklama'])}</td>
+      <td>${escapeHtml(row['Tamirde mi'])}</td>
+      <td>${escapeHtml(row['Bakıma Gönderilme'])}</td>
+      <td>${escapeHtml(row['Geri Dönme'])}</td>
+      <td>${escapeHtml(row['Söküldüğü Makine'])}</td>
+      <td>${escapeHtml(row['Sökülme Tarihi'])}</td>
+      <td>${escapeHtml(row['Son Güncelleme'])}</td>
       <td class="text-end">
-        <a class="btn btn-sm btn-outline-primary" href="/yedeks/${row.id}/edit">Düzenle</a>
-        <form class="d-inline" method="post" action="/yedeks/${row.id}/delete" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
+        <a class="btn btn-sm btn-outline-primary" href="/yedeks/${encodeURIComponent(row.id)}/edit">Düzenle</a>
+        <form class="d-inline" method="post" action="/yedeks/${encodeURIComponent(row.id)}/delete" onsubmit="return confirm('Silmek istediğinize emin misiniz?');">
           <button class="btn btn-sm btn-outline-danger" type="submit">Sil</button>
         </form>
       </td>
@@ -253,7 +253,7 @@ function renderYedeks(rows, query) {
 </div>
 <form class="row gy-2 gx-2 align-items-center mb-3" method="get" action="/yedeks">
   <div class="col-auto"><label class="col-form-label">Referans ID ile Ara:</label></div>
-  <div class="col-auto"><input class="form-control" name="q" value="${query ?? ''}"></div>
+  <div class="col-auto"><input class="form-control" name="q" value="${escapeHtml(query ?? '')}"></div>
   <div class="col-auto">
     <button class="btn btn-primary" type="submit">Ara</button>
     <a class="btn btn-secondary" href="/yedeks">Temizle</a>
@@ -275,18 +275,18 @@ function renderYedekForm(mode, record) {
 <h4>${isAdd ? 'Yedek Ekle' : 'Yedek Düzenle'}</h4>
 <div class="card shadow-sm mt-3"><div class="card-body">
   <form method="post">
-    <div class="mb-3"><label class="form-label">Referans ID</label><input required class="form-control" name="Referans ID" value="${record?.['Referans ID'] ?? ''}"></div>
-    <div class="mb-3"><label class="form-label">Açıklama</label><input class="form-control" name="Açıklama" value="${record?.['Açıklama'] ?? ''}"></div>
+    <div class="mb-3"><label class="form-label">Referans ID</label><input required class="form-control" name="Referans ID" value="${escapeHtml(record?.['Referans ID'] ?? '')}"></div>
+    <div class="mb-3"><label class="form-label">Açıklama</label><input class="form-control" name="Açıklama" value="${escapeHtml(record?.['Açıklama'] ?? '')}"></div>
     <div class="mb-3"><label class="form-label">Tamirde mi</label>
       <select class="form-select" name="Tamirde mi">
         <option value="Evet" ${currentTamirde === 'Evet' ? 'selected' : ''}>Evet</option>
         <option value="Hayır" ${currentTamirde === 'Hayır' ? 'selected' : ''}>Hayır</option>
       </select>
     </div>
-    <div class="mb-3"><label class="form-label">Bakıma Gönderilme</label><input class="form-control" name="Bakıma Gönderilme" placeholder="gg-aa-yyyy" value="${record?.['Bakıma Gönderilme'] ?? today()}"></div>
-    <div class="mb-3"><label class="form-label">Geri Dönme</label><input class="form-control" name="Geri Dönme" placeholder="gg-aa-yyyy" value="${record?.['Geri Dönme'] ?? today()}"></div>
-    <div class="mb-3"><label class="form-label">Söküldüğü Makine</label><input class="form-control" name="Söküldüğü Makine" value="${record?.['Söküldüğü Makine'] ?? ''}"></div>
-    <div class="mb-3"><label class="form-label">Sökülme Tarihi</label><input class="form-control" name="Sökülme Tarihi" placeholder="gg-aa-yyyy" value="${record?.['Sökülme Tarihi'] ?? today()}"></div>
+    <div class="mb-3"><label class="form-label">Bakıma Gönderilme</label><input class="form-control" name="Bakıma Gönderilme" placeholder="gg-aa-yyyy" value="${escapeHtml(record?.['Bakıma Gönderilme'] ?? today())}"></div>
+    <div class="mb-3"><label class="form-label">Geri Dönme</label><input class="form-control" name="Geri Dönme" placeholder="gg-aa-yyyy" value="${escapeHtml(record?.['Geri Dönme'] ?? today())}"></div>
+    <div class="mb-3"><label class="form-label">Söküldüğü Makine</label><input class="form-control" name="Söküldüğü Makine" value="${escapeHtml(record?.['Söküldüğü Makine'] ?? '')}"></div>
+    <div class="mb-3"><label class="form-label">Sökülme Tarihi</label><input class="form-control" name="Sökülme Tarihi" placeholder="gg-aa-yyyy" value="${escapeHtml(record?.['Sökülme Tarihi'] ?? today())}"></div>
     <button class="btn btn-primary" type="submit">Kaydet</button>
     <a class="btn btn-secondary" href="/yedeks">İptal</a>
   </form>
@@ -603,6 +603,16 @@ const server = http.createServer((req, res) => {
 
 const PORT = process.env.PORT || 5000;
 const BIND_HOST = process.env.HOST || '0.0.0.0';
+
+function escapeHtml(value) {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function listLanAddresses() {
   const interfaces = os.networkInterfaces();
