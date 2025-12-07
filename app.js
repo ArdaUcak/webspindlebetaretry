@@ -353,7 +353,13 @@ function handleLogin(req, res) {
   });
 }
 
-function handleLogout(res) {
+function handleLogout(req, res) {
+  const cookies = parseCookies(req.headers.cookie);
+  const sid = cookies['sid'];
+  if (sid) {
+    sessions.delete(sid);
+  }
+
   res.writeHead(302, { 'Set-Cookie': 'sid=; Max-Age=0; Path=/' , Location: '/login' });
   res.end();
 }
@@ -553,7 +559,7 @@ const server = http.createServer((req, res) => {
   const { pathname } = parseUrl(req.url, true);
 
   if (pathname === '/login') return handleLogin(req, res);
-  if (pathname === '/logout') return handleLogout(res);
+  if (pathname === '/logout') return handleLogout(req, res);
 
   const session = requireAuth(req, res);
   if (!session) return;
