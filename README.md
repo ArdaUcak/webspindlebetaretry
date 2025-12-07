@@ -25,7 +25,8 @@ A LAN-accessible Node.js rewrite of the spindle tracking app that keeps the CSV-
 
 ## Notes
 - Data is stored directly in the CSV files; edits are immediately persisted.
-- Sessions are in-memory; restart the server to reset active logins.
+- Sessions are in-memory with a 12-hour lifetime and secure cookies (HttpOnly + SameSite=Lax); restart the server to reset activ
+e logins.
 - If you can reach the app locally but not from other devices:
   - Allow inbound traffic on port 5000 (or your custom `PORT`) in Windows Defender Firewall for Private networks.
   - Confirm both machines share the same subnet (e.g., `192.168.1.x`).

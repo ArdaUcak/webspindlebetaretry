@@ -13,6 +13,7 @@ const APP_TITLE = 'STS - Spindle Takip Sistemi (Web)';
 const USERNAME = 'BAKIM';
 const PASSWORD = 'MAXIME';
 const DATE_FORMATTER = new Intl.DateTimeFormat('tr-TR');
+const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12 hours
 
 const spindleHeaders = [
   'id',
@@ -326,7 +327,15 @@ function requireAuth(req, res) {
   const cookies = parseCookies(req.headers.cookie);
   const sessionId = cookies['sid'];
   if (sessionId && sessions.has(sessionId)) {
-    return sessions.get(sessionId);
+    const session = sessions.get(sessionId);
+    if (Date.now() - session.createdAt < SESSION_TTL_MS) {
+      return session;
+    }
+
+    sessions.delete(sessionId);
+    res.writeHead(302, { 'Set-Cookie': 'sid=; Max-Age=0; Path=/; SameSite=Lax', Location: '/login' });
+    res.end();
+    return null;
   }
   res.writeHead(302, { Location: '/login' });
   res.end();
@@ -343,8 +352,8 @@ function handleLogin(req, res) {
   parseFormData(req).then((data) => {
     if (data.username === USERNAME && data.password === PASSWORD) {
       const sid = crypto.randomBytes(16).toString('hex');
-      sessions.set(sid, { username: USERNAME });
-      res.writeHead(302, { 'Set-Cookie': `sid=${sid}; HttpOnly; Path=/`, Location: '/spindles' });
+      sessions.set(sid, { username: USERNAME, createdAt: Date.now() });
+      res.writeHead(302, { 'Set-Cookie': `sid=${sid}; HttpOnly; Path=/; SameSite=Lax`, Location: '/spindles' });
       res.end();
     } else {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -360,7 +369,7 @@ function handleLogout(req, res) {
     sessions.delete(sid);
   }
 
-  res.writeHead(302, { 'Set-Cookie': 'sid=; Max-Age=0; Path=/' , Location: '/login' });
+  res.writeHead(302, { 'Set-Cookie': 'sid=; Max-Age=0; Path=/; SameSite=Lax' , Location: '/login' });
   res.end();
 }
 
